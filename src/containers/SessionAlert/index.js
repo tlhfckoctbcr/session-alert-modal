@@ -4,8 +4,7 @@ import PropTypes from "prop-types";
 import AuthForm from "../AuthForm";
 import ExtendSession from "../../components/ExtendSession";
 import Modal from "../../components/Modal";
-
-let timer;
+import { useInterval } from "../../hooks";
 
 export default function SessionAlert(props) {
   const {
@@ -18,25 +17,30 @@ export default function SessionAlert(props) {
     expirationThresholdInSeconds
   } = props;
 
+  let timeUntilExpired = expirationDateTime - new Date();
+  timeUntilExpired = Math.floor(timeUntilExpired / 1000);
+
   const [open, setOpen] = useState(false);
   const [expired, setExpired] = useState(false);
-  const [timeRemainingInSeconds, setTimeRemainingInSeconds] = useState(0);
+  const [count, setCount] = useState(timeUntilExpired);
 
-  const countdown = timeRemainingInSeconds => {
-    if (timeRemainingInSeconds <= 0) setExpired(true);
-    else setTimeRemainingInSeconds(timeRemainingInSeconds - 1);
+  useInterval(() => {
+    countdown(count);
+  }, 1000);
+
+  const openModal = () => {
+    if (!open && timeUntilExpired <= expirationThresholdInSeconds)
+      setOpen(true);
+  };
+
+  const countdown = count => {
+    openModal();
+    if (count <= 0) setExpired(true);
+    else setCount(count - 1);
   };
 
   useEffect(() => {
-    clearTimeout(timer);
-
-    const msToSeconds = ms => Math.floor(ms / 1000);
-    const timeUntilExpired = expirationDateTime - new Date();
-
-    if (msToSeconds(timeUntilExpired) <= expirationThresholdInSeconds)
-      setOpen(true);
-
-    timer = setTimeout(countdown(timeRemainingInSeconds), 1000);
+    openModal();
   }, []);
 
   const modalProps = {
@@ -48,7 +52,7 @@ export default function SessionAlert(props) {
         extend={extend}
         logout={logout}
         warningText={warningText}
-        timeRemainingInSeconds={timeRemainingInSeconds}
+        timeRemainingInSeconds={count}
       />
   };
 
@@ -63,6 +67,6 @@ SessionAlert.propTypes = {
   extend: PropTypes.func.isRequired,
   title: PropTypes.string,
   warningText: PropTypes.string,
-  expirationDateTime: PropTypes.object.isRequired,
+  expirationDateTime: PropTypes.instanceOf(Date),
   expirationThresholdInSeconds: PropTypes.number.isRequired
 };
