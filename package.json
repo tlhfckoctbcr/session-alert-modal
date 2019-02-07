@@ -1,6 +1,6 @@
 {
   "name": "session-alert-modal",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "session-alert-modal React component",
   "main": "lib/index.js",
   "module": "es/index.js",
