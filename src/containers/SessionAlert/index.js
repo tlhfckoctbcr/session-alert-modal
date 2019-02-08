@@ -67,6 +67,6 @@ SessionAlert.propTypes = {
   extend: PropTypes.func.isRequired,
   title: PropTypes.string,
   warningText: PropTypes.string,
-  expirationDateTime: PropTypes.instanceOf(Date),
+  expirationDateTime: PropTypes.instanceOf(Date).isRequired,
   expirationThresholdInSeconds: PropTypes.number.isRequired
 };
