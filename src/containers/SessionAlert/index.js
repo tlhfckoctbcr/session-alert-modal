@@ -7,6 +7,7 @@ import { useInterval } from "../../hooks";
 
 export default function SessionAlert(props) {
   const { login, logout, extend, mode, title, warningText, getExpirationDateTime, expirationThresholdInSeconds } = props;
+
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState(Infinity);
   const [expired, setExpired] = useState(false);
@@ -29,31 +30,46 @@ export default function SessionAlert(props) {
   };
 
   const fetchExpirationDateTime = () => {
-    setLoading(true);
-
     getExpirationDateTime()
       .then(expirationDateTime => {
-        setLoading(false);
         setCount(Math.floor((new Date(expirationDateTime) - new Date())/1000))
       })
       .catch(err => {
-        setLoading(false);
         setError(err);
       });
   };
 
   const getModalContent = () => {
     if (expired) {
-      if (mode === "form") return <AuthForm login={login} />;
-      if (mode === "link") return <div>Link goes here.</div>;
+      if (mode === "form")
+        return <AuthForm login={login} click={handleButtonClick} />;
+      if (mode === "link")
+        return <div>Link goes here.</div>;
     } else {
       return <ExtendSession
         extend={extend}
         logout={logout}
         warningText={warningText}
         timeRemainingInSeconds={count}
+        click={handleButtonClick}
       />;
     }
+  };
+
+  const handleButtonClick = (fn, opts = {}) => {
+    setLoading(true);
+    fn(opts)
+      .then(result => {
+        if (result) {
+          setOpen(false);
+          setLoading(false);
+          fetchExpirationDateTime();
+        }
+      })
+      .catch(error => {
+        setLoading(false);
+        console.log(error);
+      });
   };
 
   useInterval(() => {

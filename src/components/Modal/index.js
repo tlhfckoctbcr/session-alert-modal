@@ -2,6 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 
 import { withStyles } from "@material-ui/core/styles"
+import CircularProgress from "@material-ui/core/CircularProgress"
 import Dialog from "@material-ui/core/Dialog"
 import DialogContent from "@material-ui/core/DialogContent"
 import DialogTitle from "@material-ui/core/DialogTitle"
@@ -16,14 +17,27 @@ const styles = () => ({
   }
 });
 
-const Modal = ({ classes, content, open, title }) => (
+const Modal = ({ classes, content, loading, open, title }) => (
   <Dialog open={open} maxWidth={"xs"}>
-    <DialogTitle className={classes.title}>
-      {title}
-    </DialogTitle>
-    <DialogContent className={classes.content}>
-      {content}
-    </DialogContent>
+    {
+      !loading ? (
+        <React.Fragment>
+          <DialogTitle className={classes.title}>
+            {title}
+          </DialogTitle>
+          <DialogContent className={classes.content}>
+            {content}
+          </DialogContent>
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <DialogContent className={classes.content}>
+            <CircularProgress />
+          </DialogContent>
+        </React.Fragment>
+      )
+    }
+
   </Dialog>
 );
 

@@ -18,7 +18,7 @@ const styles = () => ({
   }
 });
 
-function AuthForm({ classes, login }) {
+function AuthForm({ classes, click, login }) {
   const [credentials, setCredentialsValue] = useState({
     username: "",
     password: "",
@@ -61,13 +61,14 @@ function AuthForm({ classes, login }) {
           )
         }}
       />
-      <Button className={classes.loginBtn} disableRipple color={"primary"} variant={"contained"} onClick={() => login(credentials)}>Login</Button>
+      <Button className={classes.loginBtn} disableRipple color={"primary"} variant={"contained"} onClick={() => click(login, credentials)}>Login</Button>
     </React.Fragment>
   )
 }
 
 AuthForm.propTypes = {
   classes: PropTypes.object.isRequired,
+  click: PropTypes.func.isRequired,
   login: PropTypes.func.isRequired
 };
 

@@ -14,7 +14,7 @@ const styles = {
   }
 };
 
-const ExtendSession = ({ classes, extend, logout, timeRemainingInSeconds, warningText }) => (
+const ExtendSession = ({ classes, click, extend, logout, timeRemainingInSeconds, warningText }) => (
   <React.Fragment>
     <Typography className={classes.warningText} variant={"subheading"}>
       {warningText}
@@ -22,16 +22,30 @@ const ExtendSession = ({ classes, extend, logout, timeRemainingInSeconds, warnin
     <Countdown time={timeRemainingInSeconds}  />
     <Grid container justify={"center"} spacing={16}>
       <Grid item>
-      <Button color={"primary"} variant={"contained"} onClick={extend}>Extend Session</Button>
+      <Button
+        color={"primary"}
+        variant={"contained"}
+        onClick={() => click(extend)}>
+        Extend Session
+      </Button>
       </Grid>
-      <Grid item>
-        <Button color={"default"} variant={"contained"} onClick={logout}>Logout</Button>
-      </Grid>
+      {
+        !!logout &&
+        <Grid item>
+          <Button
+            color={"default"}
+            variant={"contained"}
+            onClick={() => click(logout)}>
+            Logout
+          </Button>
+        </Grid>
+      }
     </Grid>
   </React.Fragment>
 );
 
 ExtendSession.propTypes = {
+  click: PropTypes.func.isRequired,
   extend: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
   timeRemainingInSeconds: PropTypes.number.isRequired,
