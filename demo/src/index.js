@@ -8,9 +8,10 @@ const sessionAlertProps = {
   login: credentials => console.log("Login: ", credentials),
   logout: () => console.log("Logout"),
   extend: () => console.log("Extend"),
+  mode: "form",
   title: "Example Title",
   warningText: "Example warning text.",
-  expirationDateTime: new Date(now.setSeconds(now.getSeconds() + 15)),
+  getExpirationDateTime: () => new Promise(resolve => resolve(new Date(now.setSeconds(now.getSeconds() + 15)))),
   expirationThresholdInSeconds: 10
 };
 

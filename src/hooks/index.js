@@ -14,7 +14,10 @@ export function useInterval(cb, delay) {
 
     if (delay !== null) {
       let id = setInterval(tick, delay);
-      return () => clearInterval(id);
+      return () => {
+        clearInterval(id);
+      }
     }
   }, [delay]);
 }
+
