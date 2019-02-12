@@ -42,6 +42,20 @@ export default function SessionAlert(props) {
       });
   };
 
+  const getModalContent = () => {
+    if (expired) {
+      if (mode === "form") return <AuthForm login={login} />;
+      if (mode === "link") return <div>Link goes here.</div>;
+    } else {
+      return <ExtendSession
+        extend={extend}
+        logout={logout}
+        warningText={warningText}
+        timeRemainingInSeconds={count}
+      />;
+    }
+  };
+
   useInterval(() => {
     if (!count) return;
     countdown(count);
@@ -51,21 +65,13 @@ export default function SessionAlert(props) {
     fetchExpirationDateTime();
   }, []);
 
-
   const modalProps = {
     open,
     mode,
     title,
     error,
     loading,
-    content: expired
-      ? <AuthForm login={login} />
-      : <ExtendSession
-        extend={extend}
-        logout={logout}
-        warningText={warningText}
-        timeRemainingInSeconds={count}
-      />
+    content: getModalContent()
   };
 
   return (
