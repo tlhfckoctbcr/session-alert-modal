@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 import { withStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
@@ -13,29 +12,27 @@ const styles = () => ({
     textAlign: "center"
   },
   content: {
-    padding: "10px 20px 20px 20px"
+    padding: "25px"
   }
 });
 
-const Modal = ({ classes, content, loading, open, title }) => (
+const Modal = ({ classes, open, title, loading, content }) => (
   <Dialog open={open} maxWidth={"xs"}>
     {
-      !loading ? (
+      loading
+      ?
+        <div className={classes.content}>
+          <CircularProgress />
+        </div>
+      :
         <React.Fragment>
           <DialogTitle className={classes.title}>
             {title}
           </DialogTitle>
           <DialogContent className={classes.content}>
-            {content}
+          {content}
           </DialogContent>
         </React.Fragment>
-      ) : (
-        <React.Fragment>
-          <DialogContent className={classes.content}>
-            <CircularProgress />
-          </DialogContent>
-        </React.Fragment>
-      )
     }
 
   </Dialog>
