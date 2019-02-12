@@ -1,11 +1,11 @@
-import React from "react"
-import PropTypes from "prop-types"
+import React from "react";
+import PropTypes from "prop-types";
 
-import { withStyles } from "@material-ui/core/styles"
-import CircularProgress from "@material-ui/core/CircularProgress"
-import Dialog from "@material-ui/core/Dialog"
-import DialogContent from "@material-ui/core/DialogContent"
-import DialogTitle from "@material-ui/core/DialogTitle"
+import { withStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 const styles = () => ({
   title: {
@@ -43,6 +43,11 @@ const Modal = ({ classes, content, loading, open, title }) => (
 
 Modal.propTypes = {
   classes: PropTypes.object.isRequired,
+  error: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.object
+  ]),
+  loading: PropTypes.bool.isRequired,
   open: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired
 };

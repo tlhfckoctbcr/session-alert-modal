@@ -1,9 +1,12 @@
 import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import AuthForm from "../AuthForm";
+import Typography from "@material-ui/core/Typography";
+import AuthForm from "../../components/AuthForm";
+import AuthLink from "../../components/AuthLink";
 import ExtendSession from "../../components/ExtendSession";
 import Modal from "../../components/Modal";
 import { useInterval } from "../../hooks";
+import { compareExpirationDateTimeToNow } from "../../utils";
 
 export default function SessionAlert(props) {
   const { login, logout, extend, mode, title, warningText, getExpirationDateTime, expirationThresholdInSeconds } = props;
@@ -13,6 +16,15 @@ export default function SessionAlert(props) {
   const [expired, setExpired] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useInterval(() => {
+    if (count <= 0 || loading) return;
+    countdown(count);
+  }, 1000);
+
+  useEffect(() => {
+    fetchExpirationDateTime();
+  }, []);
 
   const countdown = count => {
     if (count > 1) {
@@ -25,14 +37,15 @@ export default function SessionAlert(props) {
       setCount(count - 1);
     } else {
       setExpired(true);
-      fetchExpirationDateTime();
     }
   };
 
   const fetchExpirationDateTime = () => {
+    console.log("Fetching exp...");
+
     getExpirationDateTime()
       .then(expirationDateTime => {
-        setCount(Math.floor((new Date(expirationDateTime) - new Date())/1000))
+        setCount(compareExpirationDateTimeToNow(expirationDateTime));
       })
       .catch(err => {
         setError(err);
@@ -42,9 +55,19 @@ export default function SessionAlert(props) {
   const getModalContent = () => {
     if (expired) {
       if (mode === "form")
-        return <AuthForm login={login} click={handleButtonClick} />;
-      if (mode === "link")
-        return <div>Link goes here.</div>;
+        return <AuthForm
+          login={login}
+          click={handleButtonClick}
+        />;
+      else if (mode === "link")
+        return <AuthLink
+          login={login}
+          click={handleButtonClick}
+        />;
+      else
+        return <Typography variant={"subheading"}>
+          You have been logged out.
+        </Typography>
     } else {
       return <ExtendSession
         extend={extend}
@@ -60,26 +83,13 @@ export default function SessionAlert(props) {
     setLoading(true);
     fn(opts)
       .then(result => {
-        if (result) {
-          setOpen(false);
-          setLoading(false);
-          fetchExpirationDateTime();
-        }
+        if (result) setCount(compareExpirationDateTimeToNow(result));
+        setLoading(false);
       })
       .catch(error => {
         setLoading(false);
-        console.log(error);
       });
   };
-
-  useInterval(() => {
-    if (!count) return;
-    countdown(count);
-  }, 1000);
-
-  useEffect(() => {
-    fetchExpirationDateTime();
-  }, []);
 
   const modalProps = {
     open,

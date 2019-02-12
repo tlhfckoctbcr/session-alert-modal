@@ -2,20 +2,19 @@ import React from "react";
 import { render } from "react-dom";
 import SessionAlert from "../../src";
 
-let now = new Date();
+const reset = () =>
+  new Promise(resolve => setTimeout(() =>
+    resolve(new Date(new Date().setSeconds(new Date().getSeconds() + 900))), 4000));
 
 const sessionAlertProps = {
-  login: credentials =>
-    new Promise(resolve => setTimeout(() => resolve(true), 4000)),
-  logout: () =>
-    new Promise(resolve => setTimeout(() => resolve(true), 4000)),
-  extend: () =>
-    new Promise(resolve => setTimeout(() => resolve(true), 4000)),
+  login: reset,
+  logout: reset,
+  extend: reset,
   mode: "form",
-  title: "Example Title",
-  warningText: "Example warning text.",
+  title: "Session Warning",
+  warningText: "Your session is about to expire. You may either extend your current session, or logout.",
   getExpirationDateTime: () =>
-    new Promise(resolve => resolve(new Date(now.setSeconds(now.getSeconds() + 15)))),
+    new Promise(resolve => resolve(new Date(new Date().setSeconds(new Date().getSeconds() + 15)))),
   expirationThresholdInSeconds: 10
 };
 
