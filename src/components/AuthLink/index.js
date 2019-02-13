@@ -16,7 +16,7 @@ function AuthLink({ login }) {
         color={"default"}
         variant={"contained"}
         href={login}
-      >Go to Login Page</Button>
+      >Login</Button>
     </React.Fragment>
   );
 }

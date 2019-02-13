@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import Typography from "@material-ui/core/Typography";
 import AuthForm from "../../components/AuthForm";
 import AuthLink from "../../components/AuthLink";
 import ExtendSession from "../../components/ExtendSession";
 import Modal from "../../components/Modal";
 import { useInterval } from "../../hooks";
 import { compareExpirationDateTimeToNow } from "../../utils";
+import {Typography} from "@material-ui/core";
 
 export default function SessionAlert(props) {
   const { login, logout, extend, mode, title, warningText, getExpirationDateTime, expirationThresholdInSeconds } = props;
@@ -32,8 +32,32 @@ export default function SessionAlert(props) {
   // is to fetch the expirationDateTime and to countdown from
   // the value.
   useEffect(() => {
-    fetchExpirationDateTime();
+    fetchExpirationDateTime()
+      .then(expirationDateTime => {
+        setCount(expirationDateTime);
+      });
   }, []);
+
+
+  // When the countdown hits zero and the session is expired,
+  // fetch the expirationDateTime to ensure that the session
+  // has expired. If the mode === callLogin, call the login fn.
+  useEffect(() => {
+    if (expired) {
+      fetchExpirationDateTime()
+        .then(expirationDateTime => {
+          if (expirationDateTime === 0 && mode === "callLogin") {
+            setOpen(false);
+            login();
+          } else {
+            setCount(expirationDateTime);
+          }
+        })
+        .catch(error => {
+          setError(error);
+        });
+    }
+  }, [expired]);
 
 
   // This will only be called when the user has a count greater
@@ -58,7 +82,7 @@ export default function SessionAlert(props) {
   const fetchExpirationDateTime = async () => {
     try {
       const value = await getExpirationDateTime();
-      if (value) setCount(compareExpirationDateTimeToNow(value));
+      return compareExpirationDateTimeToNow(value);
     } catch (error) {
       setError(error);
     }
@@ -69,7 +93,7 @@ export default function SessionAlert(props) {
   // session has expired or not.
   const getModalContent = () => {
     if (expired) {
-      if (mode === "form")
+      if (mode === "form" || "")
         return <AuthForm
           login={login}
           click={handleButtonClick}
@@ -79,6 +103,10 @@ export default function SessionAlert(props) {
           login={login}
           click={handleButtonClick}
         />;
+      if (mode === "callLogin")
+        return <Typography variant={"subheading"}>
+          Please wait.
+        </Typography>
     } else {
       return <ExtendSession
         extend={extend}
