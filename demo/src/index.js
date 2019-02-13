@@ -3,7 +3,7 @@ import { render } from "react-dom";
 import SessionAlert from "../../src";
 
 const reset = () =>
-  new Promise(resolve => setTimeout(() =>
+  new Promise((resolve, reject) => setTimeout(() =>
     resolve(new Date(new Date().setSeconds(new Date().getSeconds() + 900))), 4000));
 
 const sessionAlertProps = {

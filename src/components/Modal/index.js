@@ -34,7 +34,6 @@ const Modal = ({ classes, open, title, loading, content }) => (
           </DialogContent>
         </React.Fragment>
     }
-
   </Dialog>
 );
 
