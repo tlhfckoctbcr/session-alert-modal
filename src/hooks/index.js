@@ -20,4 +20,3 @@ export function useInterval(cb, delay) {
     }
   }, [delay]);
 }
-

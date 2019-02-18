@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import AuthForm from "../../components/AuthForm";
 import AuthLink from "../../components/AuthLink";
@@ -6,7 +6,6 @@ import ExtendSession from "../../components/ExtendSession";
 import Modal from "../../components/Modal";
 import { useInterval } from "../../hooks";
 import { compareExpirationDateTimeToNow } from "../../utils";
-import {Typography} from "@material-ui/core";
 
 export default function SessionAlert(props) {
   const { login, logout, extend, mode, title, warningText, getExpirationDateTime, expirationThresholdInSeconds } = props;
@@ -17,6 +16,7 @@ export default function SessionAlert(props) {
   const [expired, setExpired] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [expirationDateTime, setExpirationDateTime] = useState(Infinity);
 
 
   // Interval will begin counting when the component mounts.
@@ -81,7 +81,9 @@ export default function SessionAlert(props) {
   // to a function that will return the expirationDateTime value.
   const fetchExpirationDateTime = async () => {
     try {
+      setLoading(true);
       const value = await getExpirationDateTime();
+      setLoading(false);
       return compareExpirationDateTimeToNow(value);
     } catch (error) {
       setError(error);
@@ -103,10 +105,6 @@ export default function SessionAlert(props) {
           login={login}
           click={handleButtonClick}
         />;
-      if (mode === "callLogin")
-        return <Typography variant={"subheading"}>
-          Please wait.
-        </Typography>
     } else {
       return <ExtendSession
         extend={extend}

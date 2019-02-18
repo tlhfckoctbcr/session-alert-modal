@@ -10,11 +10,11 @@ const sessionAlertProps = {
   login: () => console.log("Login function called."),
   logout: reset,
   extend: reset,
-  mode: "callLogin",
+  mode: "form",
   title: "Session Warning",
   warningText: "Your session is about to expire. You may either extend your current session, or logout.",
   getExpirationDateTime: () =>
-    new Promise(resolve => resolve(new Date(new Date().setSeconds(new Date().getSeconds() + 15)))),
+    new Promise(resolve => setTimeout(() => resolve(new Date(new Date().setSeconds(new Date().getSeconds() + 15))), 4000)),
   expirationThresholdInSeconds: 10
 };
 
