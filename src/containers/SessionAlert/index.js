@@ -10,91 +10,51 @@ import { compareExpirationDateTimeToNow } from "../../utils";
 export default function SessionAlert(props) {
   const { login, logout, extend, mode, title, warningText, getExpirationDateTime, expirationThresholdInSeconds } = props;
 
-
-  const [open, setOpen] = useState(false);
-  const [count, setCount] = useState(Infinity);
-  const [expired, setExpired] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [timeUntilExpired, setTimeUntilExpired] = useState(Infinity);
   const [expirationDateTime, setExpirationDateTime] = useState(Infinity);
 
-
-  // Interval will begin counting when the component mounts.
-  // The only times the interval will not count down is when
-  // the session has expired, or when loading === true.
   useInterval(() => {
-    if (count <= 0 || loading) return;
-    countdown(count);
+    if (loading) return;
+    setTimeUntilExpired(compareExpirationDateTimeToNow(expirationDateTime));
   }, 1000);
 
-
-  // Initializer - when the component mounts, the first job
-  // is to fetch the expirationDateTime and to countdown from
-  // the value.
   useEffect(() => {
-    fetchExpirationDateTime()
-      .then(expirationDateTime => {
-        setCount(expirationDateTime);
-      });
+    fetchExpirationDateTime();
   }, []);
 
-
-  // When the countdown hits zero and the session is expired,
-  // fetch the expirationDateTime to ensure that the session
-  // has expired. If the mode === callLogin, call the login fn.
   useEffect(() => {
-    if (expired) {
-      fetchExpirationDateTime()
-        .then(expirationDateTime => {
-          if (expirationDateTime === 0 && mode === "callLogin") {
-            setOpen(false);
-            login();
-          } else {
-            setCount(expirationDateTime);
-          }
-        })
-        .catch(error => {
-          setError(error);
-        });
-    }
-  }, [expired]);
+    if (!timeUntilExpired) setExpirationDateTime(new Date());
+  }, [timeUntilExpired]);
 
-
-  // This will only be called when the user has a count greater
-  // than zero, else it will determine that the session is expired.
-  const countdown = count => {
-    if (count > 1) {
-      if (expirationThresholdInSeconds >= count) {
-        if (expired) setExpired(false);
-        if (!open) setOpen(true);
-      } else {
-        if (open) setOpen(false);
-      }
-      setCount(count - 1);
-    } else {
-      setExpired(true);
-    }
+  const fetchExpirationDateTime = () => {
+    setLoading(true);
+    getExpirationDateTime()
+      .then(result => {
+        setLoading(false);
+        setExpirationDateTime(result);
+      })
+      .catch(error => {
+        setLoading(false);
+        console.log(error);
+      });
   };
 
-
-  // In order for this component to work properly, it must have access
-  // to a function that will return the expirationDateTime value.
-  const fetchExpirationDateTime = async () => {
-    try {
-      setLoading(true);
-      const value = await getExpirationDateTime();
-      setLoading(false);
-      return compareExpirationDateTimeToNow(value);
-    } catch (error) {
-      setError(error);
-    }
+  const handleButtonClick = (fn, opts = {}) => {
+    setLoading(true);
+    fn(opts)
+      .then(result => {
+        setLoading(false);
+        if (result) fetchExpirationDateTime();
+      })
+      .catch(error => {
+        setLoading(false);
+        console.log(error);
+      });
   };
 
-
-  // Modal content will change based on the selected mode, and if the
-  // session has expired or not.
   const getModalContent = () => {
-    if (expired) {
+    if (timeUntilExpired < 1) {
       if (mode === "form" || "")
         return <AuthForm
           login={login}
@@ -110,43 +70,19 @@ export default function SessionAlert(props) {
         extend={extend}
         logout={logout}
         warningText={warningText}
-        timeRemainingInSeconds={count}
+        timeUntilExpired={timeUntilExpired}
         click={handleButtonClick}
       />;
     }
   };
 
-
-  // Handler for all clickable actions (login, logout, extend).
-  // This is passed to children as a prop named "click."
-  const handleButtonClick = async (fn, opts = {}) => {
-    try {
-      setLoading(true);
-      // Function must return a promise. This promise must return
-      // a expirationDateTime value in order to set the new count
-      const result = await fn(opts);
-      if (result) {
-        const comparison = compareExpirationDateTimeToNow(result);
-        setCount(comparison);
-        setLoading(false);
-      }
-    } catch (error) {
-      setError(error);
-      setLoading(false);
-    }
-  };
-
-
   const modalProps = {
-    open,
+    open: expirationThresholdInSeconds >= timeUntilExpired,
     title,
-    count,
     loading,
     expirationThresholdInSeconds,
-    content: getModalContent(),
-    error
+    content: getModalContent()
   };
-
 
   return (
     <React.Fragment>
@@ -154,7 +90,6 @@ export default function SessionAlert(props) {
     </React.Fragment>
   )
 }
-
 
 SessionAlert.propTypes = {
   login: PropTypes.oneOfType([

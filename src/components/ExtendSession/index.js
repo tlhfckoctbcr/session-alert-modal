@@ -14,12 +14,12 @@ const styles = {
   }
 };
 
-const ExtendSession = ({ classes, click, extend, logout, timeRemainingInSeconds, warningText }) => (
+const ExtendSession = ({ classes, click, extend, logout, timeUntilExpired, warningText }) => (
   <React.Fragment>
     <Typography className={classes.warningText} variant={"subheading"}>
       {warningText}
     </Typography>
-    <Countdown time={timeRemainingInSeconds}  />
+    <Countdown time={timeUntilExpired}  />
     <Grid container justify={"center"} spacing={16}>
       <Grid item>
       <Button
@@ -48,7 +48,7 @@ ExtendSession.propTypes = {
   click: PropTypes.func.isRequired,
   extend: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
-  timeRemainingInSeconds: PropTypes.number.isRequired,
+  timeUntilExpired: PropTypes.number.isRequired,
   warningText: PropTypes.string.isRequired
 };
 
