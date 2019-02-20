@@ -29,8 +29,7 @@ export default function SessionAlert(props) {
       fetchExpirationDateTime()
         .then(result => {
           if (compareExpirationDateTimeToNow(new Date()) === 0 && mode === "callLogin") {
-            setTimeUntilExpired(Infinity);
-            setExpirationDateTime(Infinity);
+            initialize();
             login();
           }
         });
@@ -49,18 +48,24 @@ export default function SessionAlert(props) {
     }
   };
 
+  const initialize = () => {
+    setLoading(false);
+    setTimeUntilExpired(Infinity);
+    setExpirationDateTime(Infinity);
+  };
+
   const handleButtonClick = async (fn, opts = {}) => {
     setLoading(true);
     try {
       const result = await fn(opts);
       if (result)
+        setLoading(false);
         fetchExpirationDateTime()
           .then(result => setExpirationDateTime(result));
     } catch (error) {
       console.log("Error handling button click: ", error);
-      throw(error);
-    } finally {
       setLoading(false);
+      throw(error);
     }
   };
 
