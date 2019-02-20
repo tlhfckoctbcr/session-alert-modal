@@ -20,37 +20,48 @@ export default function SessionAlert(props) {
   }, 1000);
 
   useEffect(() => {
-    fetchExpirationDateTime();
+    fetchExpirationDateTime()
+      .then(result => setExpirationDateTime(result));
   }, []);
 
   useEffect(() => {
-    if (!timeUntilExpired) setExpirationDateTime(new Date());
+    if (!timeUntilExpired) {
+      fetchExpirationDateTime()
+        .then(result => {
+          if (compareExpirationDateTimeToNow(new Date()) === 0 && mode === "callLogin") {
+            setTimeUntilExpired(Infinity);
+            setExpirationDateTime(Infinity);
+            login();
+          }
+        });
+    }
   }, [timeUntilExpired]);
 
-  const fetchExpirationDateTime = () => {
+  const fetchExpirationDateTime = async () => {
     setLoading(true);
-    getExpirationDateTime()
-      .then(result => {
-        setLoading(false);
-        setExpirationDateTime(result);
-      })
-      .catch(error => {
-        setLoading(false);
-        console.log(error);
-      });
+    try {
+      return await getExpirationDateTime();
+    } catch (error) {
+      console.log("Error fetching expirationDateTime: ", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleButtonClick = (fn, opts = {}) => {
+  const handleButtonClick = async (fn, opts = {}) => {
     setLoading(true);
-    fn(opts)
-      .then(result => {
-        setLoading(false);
-        if (result) fetchExpirationDateTime();
-      })
-      .catch(error => {
-        setLoading(false);
-        console.log(error);
-      });
+    try {
+      const result = await fn(opts);
+      if (result)
+        fetchExpirationDateTime()
+          .then(result => setExpirationDateTime(result));
+    } catch (error) {
+      console.log("Error handling button click: ", error);
+      throw(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getModalContent = () => {
