@@ -21,7 +21,9 @@ export default function SessionAlert(props) {
 
   useEffect(() => {
     fetchExpirationDateTime()
-      .then(result => setExpirationDateTime(result));
+      .then(result => {
+        if (result) setExpirationDateTime(result);
+      });
   }, []);
 
   useEffect(() => {
@@ -61,7 +63,9 @@ export default function SessionAlert(props) {
       if (result)
         setLoading(false);
         fetchExpirationDateTime()
-          .then(result => setExpirationDateTime(result));
+          .then(result => {
+            if (result) setExpirationDateTime(result);
+          });
     } catch (error) {
       console.log("Error handling button click: ", error);
       setLoading(false);
