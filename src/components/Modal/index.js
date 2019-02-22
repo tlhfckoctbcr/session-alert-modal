@@ -17,7 +17,11 @@ const styles = () => ({
 });
 
 const Modal = ({ classes, open, title, loading, content }) => (
-  <Dialog open={open} maxWidth={"xs"}>
+  <Dialog
+    open={open}
+    transitionDuration={1500}
+    maxWidth={"xs"}
+  >
     {
       loading
       ?
