@@ -33,6 +33,7 @@
     "babel-preset-react": "^6.24.1",
     "coveralls": "^2.13.1",
     "jest": "^24.1.0",
+    "jest-dom": "^3.1.2",
     "nwb": "0.23.x",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",

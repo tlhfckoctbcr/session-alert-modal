@@ -1,7 +1,8 @@
+import "babel-polyfill";
+import 'jest-dom/extend-expect';
 import React from "react";
 import { render, cleanup, waitForElement } from "react-testing-library";
 import SessionAlert from "./index";
-import "babel-polyfill";
 
 afterEach(cleanup);
 
@@ -22,6 +23,8 @@ describe("SessionAlert", () => {
   };
 
   it("fetches the expirationDateTime", async () => {
+    const { queryByText } = render(<SessionAlert {...sessionAlertProps} />);
+    await waitForElement(() => console.log(document));
 
   });
 });
