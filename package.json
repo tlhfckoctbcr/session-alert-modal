@@ -36,7 +36,8 @@
     "nwb": "0.23.x",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
-    "react-test-renderer": "^16.8.3"
+    "react-test-renderer": "^16.8.3",
+    "react-testing-library": "^6.0.0"
   },
   "author": "",
   "homepage": "",
