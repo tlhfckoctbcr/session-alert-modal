@@ -115,7 +115,7 @@ const SessionAlert = props => {
       <Modal {...modalProps} />
     </React.Fragment>
   )
-}
+};
 
 SessionAlert.propTypes = {
   login: PropTypes.oneOfType([
