@@ -1,0 +1,128 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AuthForm it matches the snapshot 1`] = `
+Array [
+  <div
+    className="MuiFormControl-root-3 MuiFormControl-fullWidth-6 AuthForm-inputField-1"
+  >
+    <label
+      className="MuiFormLabel-root-18 MuiInputLabel-root-7 MuiInputLabel-formControl-12 MuiInputLabel-animated-15"
+      data-shrink={false}
+    >
+      Username
+    </label>
+    <div
+      className="MuiInputBase-root-38 MuiInput-root-25 MuiInput-underline-29 MuiInputBase-fullWidth-47 MuiInput-fullWidth-32 MuiInputBase-formControl-39 MuiInput-formControl-26"
+      onClick={[Function]}
+    >
+      <input
+        aria-invalid={false}
+        className="MuiInputBase-input-48 MuiInput-input-33 MuiInputBase-inputType-51 MuiInput-inputType-36"
+        disabled={false}
+        name="username"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        type="username"
+      />
+    </div>
+  </div>,
+  <div
+    className="MuiFormControl-root-3 MuiFormControl-fullWidth-6 AuthForm-inputField-1"
+  >
+    <label
+      className="MuiFormLabel-root-18 MuiInputLabel-root-7 MuiInputLabel-formControl-12 MuiInputLabel-animated-15"
+      data-shrink={false}
+    >
+      Password
+    </label>
+    <div
+      className="MuiInputBase-root-38 MuiInput-root-25 MuiInput-underline-29 MuiInputBase-fullWidth-47 MuiInput-fullWidth-32 MuiInputBase-formControl-39 MuiInput-formControl-26 MuiInputBase-adornedEnd-43"
+      onClick={[Function]}
+    >
+      <input
+        aria-invalid={false}
+        className="MuiInputBase-input-48 MuiInput-input-33 MuiInputBase-inputType-51 MuiInput-inputType-36 MuiInputBase-inputAdornedEnd-54"
+        disabled={false}
+        name="password"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        type="password"
+      />
+      <div
+        className="MuiInputAdornment-root-55 MuiInputAdornment-positionEnd-58"
+      >
+        <button
+          aria-label="Toggle password visibility"
+          className="MuiButtonBase-root-66 MuiIconButton-root-60"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onContextMenu={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex="0"
+          type="button"
+        >
+          <span
+            className="MuiIconButton-label-65"
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root-69"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+              <path
+                d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+              />
+            </svg>
+          </span>
+          <span
+            className="MuiTouchRipple-root-104"
+          />
+        </button>
+      </div>
+    </div>
+  </div>,
+  <button
+    className="MuiButtonBase-root-66 MuiButton-root-78 MuiButton-contained-89 MuiButton-containedPrimary-90 MuiButton-raised-92 MuiButton-raisedPrimary-93 AuthForm-loginBtn-2"
+    disabled={false}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onContextMenu={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    tabIndex="0"
+    type="button"
+  >
+    <span
+      className="MuiButton-label-79"
+    >
+      Login
+    </span>
+  </button>,
+]
+`;

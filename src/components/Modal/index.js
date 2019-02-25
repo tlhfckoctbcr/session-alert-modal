@@ -12,6 +12,7 @@ const styles = () => ({
   },
   content: {
     padding: "25px",
+    minHeight: "45px",
     textAlign: "center"
   }
 });
@@ -35,10 +36,7 @@ const Modal = ({ classes, open, title, loading, content }) => (
 
 Modal.propTypes = {
   classes: PropTypes.object.isRequired,
-  error: PropTypes.oneOfType([
-    PropTypes.bool,
-    PropTypes.object
-  ]),
+  content: PropTypes.node.isRequired,
   loading: PropTypes.bool.isRequired,
   open: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired

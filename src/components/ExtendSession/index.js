@@ -19,7 +19,7 @@ const ExtendSession = ({ classes, click, extend, logout, timeUntilExpired, warni
     <Typography className={classes.warningText} variant={"subheading"}>
       {warningText}
     </Typography>
-    <Countdown time={timeUntilExpired}  />
+    <Countdown time={timeUntilExpired} />
     <Grid container justify={"center"} spacing={16}>
       <Grid item>
       <Button

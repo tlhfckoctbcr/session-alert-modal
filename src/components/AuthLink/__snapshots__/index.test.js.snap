@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AuthLink it matches the snapshot 1`] = `
+Array [
+  <h3
+    className="MuiTypography-root-1 MuiTypography-subheading-8"
+    style={
+      Object {
+        "marginBottom": "15px",
+      }
+    }
+  >
+    Your session has expired. To login, click the button below.
+  </h3>,
+  <a
+    className="MuiButtonBase-root-63 MuiButton-root-37 MuiButton-contained-48 MuiButton-raised-51"
+    href="foo"
+    onBlur={[Function]}
+    onContextMenu={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    role="button"
+    tabIndex="0"
+  >
+    <span
+      className="MuiButton-label-38"
+    >
+      Login
+    </span>
+    <span
+      className="MuiTouchRipple-root-66"
+    />
+  </a>,
+]
+`;

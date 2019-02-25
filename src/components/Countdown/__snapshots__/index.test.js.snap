@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Countdown it matches the snapshot 1`] = `
+<h3
+  className="MuiTypography-root-1 MuiTypography-subheading-8 MuiTypography-alignCenter-24"
+  style={
+    Object {
+      "margin": "15px 0 20px 0",
+    }
+  }
+>
+  <strong>
+    Time Remaining:
+  </strong>
+   
+  10 seconds
+</h3>
+`;

@@ -14,6 +14,7 @@ const sessionAlertProps = {
   warningText: "Your session is about to expire. You may either extend your current session, or logout.",
   getExpirationDateTime: () =>
     new Promise(resolve => setTimeout(() => resolve(mockSessionRefreshTime(15)), 2000)),
+  // getExpirationDateTime: () => null,
   expirationThresholdInSeconds: 10
 };
 

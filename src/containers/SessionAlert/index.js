@@ -98,7 +98,7 @@ export default function SessionAlert(props) {
         click={handleButtonClick}
       />;
     } else {
-      return <Done style={{ transform: "scale(2)", color: "green" }} />;
+      return <Done style={{ transform: "scale(2.25)", color: "green" }} />;
     }
   };
 
