@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Done from "@material-ui/icons/Done";
-import AuthForm from "../../components/AuthForm";
+import AuthForm from "../AuthForm";
 import AuthLink from "../../components/AuthLink";
 import ExtendSession from "../../components/ExtendSession";
 import Modal from "../../components/Modal";
@@ -12,9 +12,15 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 const SessionAlert = props => {
   const { login, logout, extend, mode, title, warningText, getExpirationDateTime, expirationThresholdInSeconds } = props;
 
-  const [loading, setLoading] = useState(true);
-  const [timeUntilExpired, setTimeUntilExpired] = useState(Infinity);
-  const [expirationDateTime, setExpirationDateTime] = useState(Infinity);
+  const initialState = {
+    loading: true,
+    timeUntilExpired: Infinity,
+    expirationDateTime: Infinity
+  };
+
+  const [loading, setLoading] = useState(initialState.loading);
+  const [timeUntilExpired, setTimeUntilExpired] = useState(initialState.timeUntilExpired);
+  const [expirationDateTime, setExpirationDateTime] = useState(initialState.expirationDateTime);
 
   useInterval(() => {
     if (loading) return;
@@ -29,11 +35,31 @@ const SessionAlert = props => {
     if (!timeUntilExpired) fetchExpirationDateTime();
   }, [timeUntilExpired]);
 
+  const resetState = () => {
+    setLoading(initialState.loading);
+    setTimeUntilExpired(initialState.timeUntilExpired);
+    setExpirationDateTime(initialState.expirationDateTime);
+  };
+
   const callLogin = () => {
-    reset();
+    resetState();
     const loginResult = login();
     if (loginResult && typeof loginResult.then === "function") {
       loginResult.then(() => fetchExpirationDateTime());
+    }
+  };
+
+  const handleExpirationDateTimeReceived = expirationDateTime => {
+    if (!expirationDateTime) {
+      console.info("No expirationDateTime received.");
+      return;
+    }
+
+    if (secondsUntil(expirationDateTime) <= 0 && mode === "callLogin") {
+      callLogin();
+    } else {
+      setExpirationDateTime(expirationDateTime);
+      setTimeUntilExpired(secondsUntil(expirationDateTime));
     }
   };
 
@@ -41,34 +67,24 @@ const SessionAlert = props => {
     if (!loading) setLoading(true);
     try {
       const expirationDateTime = await getExpirationDateTime();
-      if (expirationDateTime) {
-        if (secondsUntil(expirationDateTime) <= 0 && mode === "callLogin") {
-          callLogin();
-        } else {
-          setExpirationDateTime(expirationDateTime);
-          setTimeUntilExpired(secondsUntil(expirationDateTime));
-        }
-      }
+      handleExpirationDateTimeReceived(expirationDateTime);
     } catch (error) {
-      console.log("Error fetching expirationDateTime: ", error);
+      console.error("Error fetching expirationDateTime: ", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const reset = () => {
-    setLoading(true);
-    setTimeUntilExpired(Infinity);
-    setExpirationDateTime(Infinity);
-  };
+  const loginWithCredentials = credentials =>
+    executeFnAndThenRefreshExpirationDateTime(() => login(credentials));
 
-  const handleButtonClick = async (fn, opts = {}) => {
+  const executeFnAndThenRefreshExpirationDateTime = async fn => {
     setLoading(true);
     try {
-      const result = await fn(opts);
+      const result = await fn();
       if (result) fetchExpirationDateTime();
     } catch (error) {
-      console.log("Error handling button click: ", error);
+      console.error("Error handling button click: ", error);
       setLoading(false);
     }
   };
@@ -79,24 +95,18 @@ const SessionAlert = props => {
     }
 
     if (timeUntilExpired < 1) {
-      if (mode === "form" || "")
-        return <AuthForm
-          login={login}
-          click={handleButtonClick}
-        />;
-      if (mode === "link")
-        return <AuthLink
-          login={login}
-          click={handleButtonClick}
-        />;
+      if (mode === "form" || "") return <AuthForm login={loginWithCredentials} />;
+      if (mode === "link") return <AuthLink loginHref={login} />;
+
     } else if (timeUntilExpired <= expirationThresholdInSeconds) {
       return <ExtendSession
         extend={extend}
         logout={logout}
         warningText={warningText}
         timeUntilExpired={timeUntilExpired}
-        click={handleButtonClick}
+        click={executeFnAndThenRefreshExpirationDateTime}
       />;
+
     } else {
       return <Done style={{ transform: "scale(2.25)", color: "green" }} />;
     }

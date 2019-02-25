@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
-function AuthLink({ login }) {
+function AuthLink({ loginHref }) {
   return (
     <React.Fragment>
       <Typography
@@ -15,14 +15,14 @@ function AuthLink({ login }) {
       <Button
         color={"default"}
         variant={"contained"}
-        href={login}
+        href={loginHref}
       >Login</Button>
     </React.Fragment>
   );
 }
 
 AuthLink.propTypes = {
-  login: PropTypes.string.isRequired
+  loginHref: PropTypes.string.isRequired
 };
 
 export default AuthLink;
