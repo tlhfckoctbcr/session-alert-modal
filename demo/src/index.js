@@ -3,16 +3,17 @@ import { render } from "react-dom";
 import SessionAlert from "../../src";
 
 const reset = () => new Promise(resolve => setTimeout(() => resolve(true), 2000));
+const mockSessionRefreshTime = n => new Date(new Date().setSeconds(new Date().getSeconds() + n));
 
 const sessionAlertProps = {
   login: reset,
   logout: reset,
   extend: reset,
-  mode: "link",
+  mode: "form",
   title: "Session Warning",
   warningText: "Your session is about to expire. You may either extend your current session, or logout.",
   getExpirationDateTime: () =>
-    new Promise(resolve => setTimeout(() => resolve(new Date()), 2000)),
+    new Promise(resolve => setTimeout(() => resolve(mockSessionRefreshTime(15)), 2000)),
   expirationThresholdInSeconds: 10
 };
 

@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import Done from "@material-ui/icons/Done";
 import AuthForm from "../../components/AuthForm";
 import AuthLink from "../../components/AuthLink";
 import ExtendSession from "../../components/ExtendSession";
 import Modal from "../../components/Modal";
 import { useInterval } from "../../hooks";
-
-// Rename function to express its purpose more directly
-// "secondsUntil"
-import { compareExpirationDateTimeToNow } from "../../utils";
+import { secondsUntil } from "../../utils";
+import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
 
 export default function SessionAlert(props) {
   const { login, logout, extend, mode, title, warningText, getExpirationDateTime, expirationThresholdInSeconds } = props;
@@ -19,7 +18,7 @@ export default function SessionAlert(props) {
 
   useInterval(() => {
     if (loading) return;
-    setTimeUntilExpired(compareExpirationDateTimeToNow(expirationDateTime));
+    setTimeUntilExpired(secondsUntil(expirationDateTime));
   }, 1000);
 
   useEffect(() => {
@@ -27,29 +26,29 @@ export default function SessionAlert(props) {
   }, []);
 
   useEffect(() => {
-    if (!timeUntilExpired) {
-      fetchExpirationDateTime()
-        .then(expirationDateTime => {
-          if (compareExpirationDateTimeToNow(expirationDateTime) <= 0 && mode === "callLogin") {
-            reset();
-
-            const loginResult = login();
-            if (loginResult && typeof loginResult.then === "function")
-             loginResult.then(() => fetchExpirationDateTime());
-          }
-        });
-    }
+    if (!timeUntilExpired) fetchExpirationDateTime();
   }, [timeUntilExpired]);
+
+  const callLogin = () => {
+    reset();
+    const loginResult = login();
+    if (loginResult && typeof loginResult.then === "function") {
+      loginResult.then(() => fetchExpirationDateTime());
+    }
+  };
 
   const fetchExpirationDateTime = async () => {
     if (!loading) setLoading(true);
     try {
-      const result = await getExpirationDateTime();
-      if (result) {
-        setExpirationDateTime(result);
-        setTimeUntilExpired(compareExpirationDateTimeToNow(result));
+      const expirationDateTime = await getExpirationDateTime();
+      if (expirationDateTime) {
+        if (secondsUntil(expirationDateTime) <= 0 && mode === "callLogin") {
+          callLogin();
+        } else {
+          setExpirationDateTime(expirationDateTime);
+          setTimeUntilExpired(secondsUntil(expirationDateTime));
+        }
       }
-      return Promise.resolve(result);
     } catch (error) {
       console.log("Error fetching expirationDateTime: ", error);
     } finally {
@@ -75,6 +74,10 @@ export default function SessionAlert(props) {
   };
 
   const getModalContent = () => {
+    if (loading) {
+      return <CircularProgress />;
+    }
+
     if (timeUntilExpired < 1) {
       if (mode === "form" || "")
         return <AuthForm
@@ -95,7 +98,7 @@ export default function SessionAlert(props) {
         click={handleButtonClick}
       />;
     } else {
-      return <React.Fragment>YOU DID IT, WOW</React.Fragment>
+      return <Done style={{ transform: "scale(2)", color: "green" }} />;
     }
   };
 
