@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "babel-jest": "^20.0.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "coveralls": "^2.13.1",
@@ -42,7 +43,7 @@
   "license": "MIT",
   "repository": "",
   "jest": {
-    "verbose": true,
+    "verbose": false,
     "transform": {
       "^.+\\.js$": "<rootDir>/jest.transform.js"
     }

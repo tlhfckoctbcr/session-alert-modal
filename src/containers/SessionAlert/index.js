@@ -7,9 +7,9 @@ import ExtendSession from "../../components/ExtendSession";
 import Modal from "../../components/Modal";
 import { useInterval } from "../../hooks";
 import { secondsUntil } from "../../utils";
-import CircularProgress from "@material-ui/core/es/CircularProgress/CircularProgress";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
-export default function SessionAlert(props) {
+const SessionAlert = props => {
   const { login, logout, extend, mode, title, warningText, getExpirationDateTime, expirationThresholdInSeconds } = props;
 
   const [loading, setLoading] = useState(true);
@@ -135,3 +135,11 @@ SessionAlert.propTypes = {
   getExpirationDateTime: PropTypes.func.isRequired,
   expirationThresholdInSeconds: PropTypes.number.isRequired
 };
+
+SessionAlert.defaultProps = {
+  mode: "",
+  title: "Session Warning",
+  warningText: "Your session is about to expire."
+};
+
+export default SessionAlert;
