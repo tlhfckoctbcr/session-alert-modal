@@ -1,21 +1,27 @@
 import React from "react";
-import { create } from "react-test-renderer";
+import { render, cleanup, waitForElement } from "react-testing-library";
 import SessionAlert from "./index";
 import "babel-polyfill";
 
-const render = create(<SessionAlert
-  login={() => null}
-  extend={() => null}
-  getExpirationDateTime={() => null}
-  expirationThresholdInSeconds={10}
-/>);
+afterEach(cleanup);
 
 describe("SessionAlert", () => {
-  it("should not render without an expirationDateTime", () => {
-    expect(render.toJSON()).toBe(null);
-  });
+  const reset = () => new Promise(resolve => setTimeout(() => resolve(true), 2000));
+  const mockSessionRefreshTime = n => new Date(new Date().setSeconds(new Date().getSeconds() + n));
 
-  it("should render if the expirationDateTime is within the threshold", () => {
+  const sessionAlertProps = {
+    login: reset,
+    logout: reset,
+    extend: reset,
+    mode: "form",
+    title: "Session Warning",
+    warningText: "Your session is about to expire.",
+    getExpirationDateTime: () =>
+      new Promise(resolve => setTimeout(() => resolve(mockSessionRefreshTime(15)), 2000)),
+    expirationThresholdInSeconds: 10
+  };
+
+  it("fetches the expirationDateTime", async () => {
 
   });
 });
