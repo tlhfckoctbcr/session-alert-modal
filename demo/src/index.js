@@ -8,8 +8,8 @@ const mockSessionRefreshTime = n => new Date(new Date().setSeconds(new Date().ge
 let i = 0;
 
 const sessionAlertProps = {
-  login: creds => {
-    console.log("CREDS: ", creds);
+  login: credentials => {
+    console.log("Credentials received:", credentials);
     return true;
   },
   logout: reset,
@@ -20,12 +20,11 @@ const sessionAlertProps = {
   getExpirationDateTime: () => {
     if (!i) {
       i++;
-      return new Promise(resolve => setTimeout(() => resolve(mockSessionRefreshTime(2)), 2000));
+      return new Promise(resolve => setTimeout(() => resolve(mockSessionRefreshTime(15)), 2000));
     } else {
       return new Promise(resolve => resolve(new Date()));
     }
   },
-  // getExpirationDateTime: () => null,
   expirationThresholdInSeconds: 10
 };
 

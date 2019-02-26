@@ -10,7 +10,7 @@ import { secondsUntil } from "../../utils";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const SessionAlert = props => {
-  const { login, logout, extend, mode, title, warningText, getExpirationDateTime, expirationThresholdInSeconds } = props;
+  const { login, logout, expirationThresholdInSeconds, extend, fullScreen, getExpirationDateTime, mode, title, warningText } = props;
 
   const initialState = {
     loading: true,
@@ -113,11 +113,12 @@ const SessionAlert = props => {
   };
 
   const modalProps = {
-    open: expirationThresholdInSeconds >= timeUntilExpired,
-    loading,
-    title,
+    content: getModalContent(),
     expirationThresholdInSeconds,
-    content: getModalContent()
+    fullScreen,
+    loading,
+    open: expirationThresholdInSeconds >= timeUntilExpired,
+    title
   };
 
   return (

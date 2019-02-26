@@ -10,7 +10,8 @@ function AuthLink({ loginHref }) {
         variant={"subheading"}
         style={{ marginBottom: "15px" }}
       >
-        Your session has expired. To login, click the button below.
+        Your session has expired.<br />
+        To login, click the button below.
       </Typography>
       <Button
         color={"default"}

@@ -17,10 +17,11 @@ const styles = () => ({
   }
 });
 
-const Modal = ({ classes, open, title, loading, content }) => (
+const Modal = ({ classes, content, fullScreen, loading, open, title }) => (
   <Dialog
     open={open}
     transitionDuration={1500}
+    fullScreen={fullScreen}
     maxWidth={"xs"}
   >
     <DialogTitle className={classes.title}>

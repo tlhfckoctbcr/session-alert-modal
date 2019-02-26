@@ -1,30 +1,32 @@
 import "babel-polyfill";
 import 'jest-dom/extend-expect';
 import React from "react";
-import { render, cleanup, waitForElement } from "react-testing-library";
+import { render, cleanup } from "react-testing-library";
 import SessionAlert from "./index";
 
 afterEach(cleanup);
 
 describe("SessionAlert", () => {
-  const reset = () => new Promise(resolve => setTimeout(() => resolve(true), 2000));
-  const mockSessionRefreshTime = n => new Date(new Date().setSeconds(new Date().getSeconds() + n));
-
-  const sessionAlertProps = {
-    login: reset,
-    logout: reset,
-    extend: reset,
+  let renderResult;
+  let sessionAlertProps = {
+    login: jest.fn(),
+    logout: jest.fn(),
+    extend: jest.fn(),
     mode: "form",
     title: "Session Warning",
     warningText: "Your session is about to expire.",
-    getExpirationDateTime: () =>
-      new Promise(resolve => setTimeout(() => resolve(mockSessionRefreshTime(15)), 2000)),
+    getExpirationDateTime: jest.fn(),
     expirationThresholdInSeconds: 10
   };
 
-  it("fetches the expirationDateTime", async () => {
-    const { queryByText } = render(<SessionAlert {...sessionAlertProps} />);
-    await waitForElement(() => console.log(document));
+  describe("When the session is expired and mode === 'form'", () => {
+    beforeEach(() => {
+      sessionAlertProps.getExpirationDateTime.mockReturnValue(Promise.resolve(new Date()));
+      renderResult = render(<SessionAlert {...sessionAlertProps} />);
+    });
 
+    it("calls expirationDateTime once when the component mounts", () => {
+      expect(sessionAlertProps.getExpirationDateTime).toHaveBeenCalledTimes(1);
+    });
   });
 });
